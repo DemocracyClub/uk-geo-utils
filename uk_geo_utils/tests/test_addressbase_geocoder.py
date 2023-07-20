@@ -31,7 +31,6 @@ class FuzzyInt(int):
 
 
 class AddressBaseGeocoderTest(TestCase):
-
     fixtures = [
         # records in Address, no corresponding records in ONSUD
         "addressbase_geocoder/AA11AA.json",

@@ -8,7 +8,6 @@ from uk_geo_utils.management.commands.clean_addressbase_standard import Command
 
 class CleanAddressesTest(TestCase):
     def test_clean_addresses_valid(self):
-
         # path to files we're going to process
         csv_path = os.path.abspath(
             os.path.join(
