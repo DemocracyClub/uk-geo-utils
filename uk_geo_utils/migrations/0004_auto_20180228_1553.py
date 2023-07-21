@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("uk_geo_utils", "0003_auto_20171030_1504")]
 
     operations = [

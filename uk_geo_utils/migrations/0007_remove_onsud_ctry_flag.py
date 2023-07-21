@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("uk_geo_utils", "0006_auto_20180612_1655")]
 
     operations = [migrations.RemoveField(model_name="onsud", name="ctry_flag")]

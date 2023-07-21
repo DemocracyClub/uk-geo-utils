@@ -4,7 +4,6 @@ from uk_geo_utils.helpers import Postcode
 
 
 class PostcodeHelperTest(TestCase):
-
     postcodes = [
         {"input": "m1+1Aa", "exp_space": "M1 1AA", "exp_no_space": "M11AA"},
         {"input": "m60�1nw", "exp_space": "M60 1NW", "exp_no_space": "M601NW"},

@@ -7,7 +7,7 @@ executors:
         environment:
           CIRCLECI: true
           PGHOST: 127.0.0.1
-      - image: circleci/postgres:11.2-alpine-postgis-ram
+      - image: cimg/postgres:12.13-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
@@ -17,7 +17,7 @@ executors:
         environment:
           CIRCLECI: true
           PGHOST: 127.0.0.1
-      - image: circleci/postgres:11.2-alpine-postgis-ram
+      - image: cimg/postgres:12.13-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
@@ -27,7 +27,7 @@ executors:
         environment:
           CIRCLECI: true
           PGHOST: 127.0.0.1
-      - image: circleci/postgres:11.2-alpine-postgis-ram
+      - image: cimg/postgres:12.13-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
@@ -71,4 +71,4 @@ workflows:
           matrix:
             parameters:
               python_version: [ py38, py39, py310 ]
-              django_version: [ ">=3.2,<4.0", ">=4.0,<4.1", ">=4.1,<4.2" ]
+              django_version: [ ">=3.2,<4.0", ">=4.0,<4.1", ">=4.1,<4.2", ">=4.2,<4.3" ]

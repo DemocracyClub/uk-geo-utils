@@ -57,7 +57,6 @@ class BaseGeocoder(metaclass=abc.ABCMeta):
 
 class AddressBaseGeocoder(BaseGeocoder):
     def __init__(self, postcode):
-
         self.postcode = Postcode(postcode)
         if self.postcode.territory == "NI":
             raise NorthernIrelandException("Postcode is in Northern Ireland")

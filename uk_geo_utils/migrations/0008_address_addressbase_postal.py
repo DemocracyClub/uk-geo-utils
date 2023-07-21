@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("uk_geo_utils", "0007_remove_onsud_ctry_flag")]
 
     operations = [
