@@ -11,6 +11,16 @@ executors:
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
+  py312:
+    docker:
+      - image: cimg/python:3.12
+        environment:
+          CIRCLECI: true
+          PGHOST: 127.0.0.1
+      - image: cimg/postgres:16.3-postgis
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test
 
 jobs:
   build-and-test:
@@ -50,5 +60,5 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              python_version: [ py310 ]
+              python_version: [ py310, py312 ]
               django_version: [ ">=3.2,<4.0", ">=4.0,<4.1", ">=4.1,<4.2", ">=4.2,<4.3" ]
