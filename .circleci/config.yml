@@ -1,26 +1,6 @@
 version: 2.1
 
 executors:
-  py38:
-    docker:
-      - image: cimg/python:3.8
-        environment:
-          CIRCLECI: true
-          PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test
-  py39:
-    docker:
-      - image: cimg/python:3.9
-        environment:
-          CIRCLECI: true
-          PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test
   py310:
     docker:
       - image: cimg/python:3.10
@@ -70,5 +50,5 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              python_version: [ py38, py39, py310 ]
+              python_version: [ py310 ]
               django_version: [ ">=3.2,<4.0", ">=4.0,<4.1", ">=4.1,<4.2", ">=4.2,<4.3" ]
