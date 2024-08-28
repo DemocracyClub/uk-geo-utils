@@ -7,7 +7,7 @@ executors:
         environment:
           CIRCLECI: true
           PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
+      - image: cimg/postgres:16.3-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
