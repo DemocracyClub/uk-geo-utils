@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from uk_geo_utils.helpers import LocalAuthAddressFormatter
 
 
@@ -108,5 +109,6 @@ class LocalAuthAddressFormatterTest(TestCase):
             town_name="BRISTOL",
         )
         self.assertEqual(
-            "FLAT 1 4A WARWICK ROAD, COTHAM, BRISTOL", af.generate_address_label()
+            "FLAT 1 4A WARWICK ROAD, COTHAM, BRISTOL",
+            af.generate_address_label(),
         )

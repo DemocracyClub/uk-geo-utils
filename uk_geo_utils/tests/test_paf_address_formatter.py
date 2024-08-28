@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from uk_geo_utils.helpers import PAFAddressFormatter
 
 
@@ -17,7 +18,9 @@ class PAFAddressFormatterTest(TestCase):
             double_dependent_locality="",
             dependent_locality="",
         )
-        self.assertEqual("33 BONEHURST ROAD, HORLEY", af.generate_address_label())
+        self.assertEqual(
+            "33 BONEHURST ROAD, HORLEY", af.generate_address_label()
+        )
 
     def test_building_name_x_to_y(self):
         af = PAFAddressFormatter(
@@ -70,7 +73,8 @@ class PAFAddressFormatterTest(TestCase):
             dependent_locality="",
         )
         self.assertEqual(
-            "FLAT 12, GLOBE COURT, HIGH ROAD, BROXBOURNE", af.generate_address_label()
+            "FLAT 12, GLOBE COURT, HIGH ROAD, BROXBOURNE",
+            af.generate_address_label(),
         )
 
     def test_org_and_dept(self):

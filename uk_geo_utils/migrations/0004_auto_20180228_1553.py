@@ -9,8 +9,12 @@ class Migration(migrations.Migration):
     dependencies = [("uk_geo_utils", "0003_auto_20171030_1504")]
 
     operations = [
-        migrations.RenameField(model_name="onspd", old_name="hro", new_name="nhser"),
-        migrations.RenameField(model_name="onspd", old_name="gor", new_name="rgn"),
+        migrations.RenameField(
+            model_name="onspd", old_name="hro", new_name="nhser"
+        ),
+        migrations.RenameField(
+            model_name="onspd", old_name="gor", new_name="rgn"
+        ),
         migrations.RemoveField(model_name="onspd", name="cened"),
         migrations.RemoveField(model_name="onspd", name="edind"),
         migrations.RemoveField(model_name="onspd", name="lea"),

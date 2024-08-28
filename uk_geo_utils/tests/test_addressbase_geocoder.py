@@ -1,16 +1,17 @@
-from django.test import TestCase
-from django.core.exceptions import FieldDoesNotExist
 from django.contrib.gis.geos import Point
+from django.core.exceptions import FieldDoesNotExist
+from django.test import TestCase
+
 from uk_geo_utils.geocoders import (
     AddressBaseGeocoder,
-    get_address_model,
-    get_onsud_model,
     AddressBaseNotImportedException,
-    OnsudNotImportedException,
     CodesNotFoundException,
     MultipleCodesException,
     NorthernIrelandException,
+    OnsudNotImportedException,
     StrictMatchException,
+    get_address_model,
+    get_onsud_model,
 )
 from uk_geo_utils.helpers import AddressSorter
 from uk_geo_utils.models import Address
@@ -147,9 +148,13 @@ class AddressBaseGeocoderTest(TestCase):
         """
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("CC1 1CC")
-            self.assertEqual("B01000001", addressbase.get_code("lad", "00000008"))
+            self.assertEqual(
+                "B01000001", addressbase.get_code("lad", "00000008")
+            )
             self.assertIsInstance(addressbase.get_point("00000008"), Point)
-            self.assertEqual("B01000002", addressbase.get_code("lad", "00000009"))
+            self.assertEqual(
+                "B01000002", addressbase.get_code("lad", "00000009")
+            )
             self.assertIsInstance(addressbase.get_point("00000009"), Point)
 
     def test_get_code_by_uprn_invalid_uprn(self):

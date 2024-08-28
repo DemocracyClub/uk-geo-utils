@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from uk_geo_utils.models import Address
 
 

@@ -2,7 +2,9 @@ import csv
 import os
 import re
 from io import StringIO
+
 from django.test import TestCase
+
 from uk_geo_utils.management.commands.clean_addressbase_plus import Command
 
 
@@ -44,7 +46,9 @@ class CleanAddressesTest(TestCase):
                 self.assertEqual(5, len(row))
                 self.assertTrue(row[0].startswith("1000000000"))
                 self.assertTrue(
-                    re.match(r"SRID=4326;POINT\(-?\d*.?\d+ -?\d*.?\d+\)", row[3])
+                    re.match(
+                        r"SRID=4326;POINT\(-?\d*.?\d+ -?\d*.?\d+\)", row[3]
+                    )
                 )
 
     def test_clean_addresses_file_not_found(self):

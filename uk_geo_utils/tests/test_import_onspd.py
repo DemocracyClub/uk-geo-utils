@@ -1,9 +1,11 @@
 import os
 from io import StringIO
+
 from django.contrib.gis.geos import Point
 from django.test import TestCase
-from uk_geo_utils.models import Onspd
+
 from uk_geo_utils.management.commands.import_onspd import Command
+from uk_geo_utils.models import Onspd
 
 
 class May2018OnspdImportTest(TestCase):
@@ -14,7 +16,8 @@ class May2018OnspdImportTest(TestCase):
         # path to file we're going to import
         csv_path = os.path.abspath(
             os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../fixtures/onspd_may2018"
+                os.path.dirname(os.path.abspath(__file__)),
+                "../fixtures/onspd_may2018",
             )
         )
 
@@ -32,7 +35,9 @@ class May2018OnspdImportTest(TestCase):
 
         # row with valid grid ref should have valid Point() location
         al11aa = Onspd.objects.filter(pcds="AL1 1AA")[0]
-        self.assertEqual(Point(-0.341337, 51.749084, srid=4326), al11aa.location)
+        self.assertEqual(
+            Point(-0.341337, 51.749084, srid=4326), al11aa.location
+        )
 
         # row with invalid grid ref should have NULL location
         im11aa = Onspd.objects.filter(pcds="IM1 1AA")[0]
@@ -64,7 +69,8 @@ class Aug2022OnspdImportTest(TestCase):
         # path to file we're going to import
         csv_path = os.path.abspath(
             os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../fixtures/onspd_aug2022"
+                os.path.dirname(os.path.abspath(__file__)),
+                "../fixtures/onspd_aug2022",
             )
         )
 
@@ -82,7 +88,9 @@ class Aug2022OnspdImportTest(TestCase):
 
         # row with valid grid ref should have valid Point() location
         al11aa = Onspd.objects.filter(pcds="AL1 1AA")[0]
-        self.assertEqual(Point(-0.341337, 51.749084, srid=4326), al11aa.location)
+        self.assertEqual(
+            Point(-0.341337, 51.749084, srid=4326), al11aa.location
+        )
 
         # row with invalid grid ref should have NULL location
         im11aa = Onspd.objects.filter(pcds="IM1 1AA")[0]
