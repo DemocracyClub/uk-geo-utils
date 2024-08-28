@@ -130,7 +130,7 @@ class AddressBaseGeocoder(BaseGeocoder):
                 # if not strict, ignore this condition
                 pass
 
-        codes = set([getattr(u, code_type_field.attname) for u in self._uprns])
+        codes = {getattr(u, code_type_field.attname) for u in self._uprns}
         if len(codes) == 1:
             # all the uprns supplied are in the same area
             return list(codes)[0]

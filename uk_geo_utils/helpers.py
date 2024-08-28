@@ -36,8 +36,8 @@ class Postcode:
 
     def __eq__(self, other):
         return (
-            type(self) == Postcode
-            and type(other) == Postcode
+            isinstance(self, Postcode)
+            and isinstance(other, Postcode)
             and self.without_space == other.without_space
         )
 
@@ -149,9 +149,7 @@ class PAFAddressFormatter:
             and element[-1].isalpha()
         ):
             return True
-        if len(element) == 1 and element.isalpha():
-            return True
-        return False
+        return bool(len(element) == 1 and element.isalpha())
 
     def _append_to_label(self, element):
         """Append address element to the label.

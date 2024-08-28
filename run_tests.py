@@ -7,7 +7,11 @@ from django.conf import settings
 from django.test.utils import get_runner
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-root = lambda *x: os.path.join(BASE_DIR, *x)
+
+
+def root(*x):
+    return os.path.join(BASE_DIR, *x)
+
 
 if not settings.configured:
     settings.configure(
