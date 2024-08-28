@@ -42,9 +42,10 @@ jobs:
             pip install -U pip .[development]
             sudo apt-get update && sudo apt-get install -y gdal-bin python3-gdal
       - run:
-          name: Black
+          name: Ruff
           command: |
-            black . --check
+            ruff check .
+            ruff format . --check
       - run:
           name: Run tests
           command: |
