@@ -1,6 +1,10 @@
 # Changelog
 
-## :package: [0.11.0](https://pypi.org/project/uk-geo-utils/0.11.0/) - 2021-11-02
+## :package: [0.12.0](https://pypi.org/project/uk-geo-utils/0.12.0/) - 2023-07-21
+
+* Tested on Django 4.2
+
+## :package: [0.11.0](https://pypi.org/project/uk-geo-utils/0.11.0/) - 2022-11-14
 
 * Update ONSPD model for 2021 census fields. Now call with `--header may2018` or `--header aug2022`.
 * Specify required python versions 3.8-3.10 inline with CI testing. 
