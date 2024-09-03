@@ -1,16 +1,17 @@
-from django.test import TestCase
-from django.core.exceptions import FieldDoesNotExist
 from django.contrib.gis.geos import Point
+from django.core.exceptions import FieldDoesNotExist
+from django.test import TestCase
+
 from uk_geo_utils.geocoders import (
     AddressBaseGeocoder,
-    get_address_model,
-    get_onsud_model,
     AddressBaseNotImportedException,
-    OnsudNotImportedException,
     CodesNotFoundException,
     MultipleCodesException,
     NorthernIrelandException,
+    OnsudNotImportedException,
     StrictMatchException,
+    get_address_model,
+    get_onsud_model,
 )
 from uk_geo_utils.helpers import AddressSorter
 from uk_geo_utils.models import Address
@@ -48,31 +49,35 @@ class AddressBaseGeocoderTest(TestCase):
         The AddressBase table has no records in it
         """
         get_address_model().objects.all().delete()
-        with self.assertNumQueries(FuzzyInt(0, 4)):
-            with self.assertRaises(AddressBaseNotImportedException):
-                addressbase = AddressBaseGeocoder("AA11AA")
+        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
+            AddressBaseNotImportedException
+        ):
+            AddressBaseGeocoder("AA11AA")
 
     def test_empty_onsud_table(self):
         """
         The ONSUD table has no records in it
         """
         get_onsud_model().objects.all().delete()
-        with self.assertNumQueries(FuzzyInt(0, 4)):
-            with self.assertRaises(OnsudNotImportedException):
-                addressbase = AddressBaseGeocoder("AA11AA")
+        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
+            OnsudNotImportedException
+        ):
+            AddressBaseGeocoder("AA11AA")
 
     def test_northern_ireland(self):
-        with self.assertNumQueries(FuzzyInt(0, 4)):
-            with self.assertRaises(NorthernIrelandException):
-                addressbase = AddressBaseGeocoder("BT11AA")
+        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
+            NorthernIrelandException
+        ):
+            AddressBaseGeocoder("BT11AA")
 
     def test_no_records(self):
         """
         We can't find any records for the given postcode in the AddressBase table
         """
-        with self.assertNumQueries(FuzzyInt(0, 4)):
-            with self.assertRaises(get_address_model().DoesNotExist):
-                addressbase = AddressBaseGeocoder("ZZ1 1ZZ")
+        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
+            get_address_model().DoesNotExist
+        ):
+            AddressBaseGeocoder("ZZ1 1ZZ")
 
     def test_no_codes(self):
         """
@@ -83,7 +88,7 @@ class AddressBaseGeocoderTest(TestCase):
             addressbase = AddressBaseGeocoder("AA11AA")
 
             with self.assertRaises(CodesNotFoundException):
-                result = addressbase.get_code("lad")
+                addressbase.get_code("lad")
 
             self.assertIsInstance(addressbase.centroid, Point)
 
@@ -129,7 +134,7 @@ class AddressBaseGeocoderTest(TestCase):
             addressbase = AddressBaseGeocoder("CC1 1CC")
 
             with self.assertRaises(MultipleCodesException):
-                result = addressbase.get_code("lad")
+                addressbase.get_code("lad")
 
             self.assertEqual("A01000001", addressbase.get_code("cty"))
 
@@ -139,7 +144,7 @@ class AddressBaseGeocoderTest(TestCase):
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("CC1 1CC")
             with self.assertRaises(FieldDoesNotExist):
-                result = addressbase.get_code("foo")  # not a real code type
+                addressbase.get_code("foo")  # not a real code type
 
     def test_get_code_by_uprn_valid(self):
         """
@@ -147,9 +152,13 @@ class AddressBaseGeocoderTest(TestCase):
         """
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("CC1 1CC")
-            self.assertEqual("B01000001", addressbase.get_code("lad", "00000008"))
+            self.assertEqual(
+                "B01000001", addressbase.get_code("lad", "00000008")
+            )
             self.assertIsInstance(addressbase.get_point("00000008"), Point)
-            self.assertEqual("B01000002", addressbase.get_code("lad", "00000009"))
+            self.assertEqual(
+                "B01000002", addressbase.get_code("lad", "00000009")
+            )
             self.assertIsInstance(addressbase.get_point("00000009"), Point)
 
     def test_get_code_by_uprn_invalid_uprn(self):
@@ -159,9 +168,9 @@ class AddressBaseGeocoderTest(TestCase):
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("CC1 1CC")
             with self.assertRaises(get_address_model().DoesNotExist):
-                result = addressbase.get_code("lad", "foo")
+                addressbase.get_code("lad", "foo")
             with self.assertRaises(get_address_model().DoesNotExist):
-                result = addressbase.get_point("foo")
+                addressbase.get_point("foo")
 
     def test_get_code_by_uprn_invalid_uprn_for_postcode(self):
         """
@@ -172,9 +181,9 @@ class AddressBaseGeocoderTest(TestCase):
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("CC1 1CC")
             with self.assertRaises(get_address_model().DoesNotExist):
-                result = addressbase.get_code("lad", "00000001")
+                addressbase.get_code("lad", "00000001")
             with self.assertRaises(get_address_model().DoesNotExist):
-                result = addressbase.get_point("00000001")
+                addressbase.get_point("00000001")
 
     def test_get_code_by_uprn_no_onsud(self):
         """
@@ -183,7 +192,7 @@ class AddressBaseGeocoderTest(TestCase):
         with self.assertNumQueries(FuzzyInt(0, 4)):
             addressbase = AddressBaseGeocoder("BB1 1BB")
             with self.assertRaises(get_onsud_model().DoesNotExist):
-                result = addressbase.get_code("lad", "00000006")
+                addressbase.get_code("lad", "00000006")
             self.assertIsInstance(addressbase.get_point("00000006"), Point)
 
     def test_addresses_property(self):

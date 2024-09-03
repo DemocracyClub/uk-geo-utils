@@ -1,7 +1,8 @@
 import os
-from django.db import connection
-from django.db import transaction
+
 from django.core.management.base import BaseCommand
+from django.db import connection, transaction
+
 from uk_geo_utils.helpers import get_address_model
 
 

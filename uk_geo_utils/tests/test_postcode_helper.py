@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
+
 from uk_geo_utils.helpers import Postcode
 
 
@@ -7,8 +8,16 @@ class PostcodeHelperTest(TestCase):
     postcodes = [
         {"input": "m1+1Aa", "exp_space": "M1 1AA", "exp_no_space": "M11AA"},
         {"input": "m60�1nw", "exp_space": "M60 1NW", "exp_no_space": "M601NW"},
-        {"input": "cR26xh        ", "exp_space": "CR2 6XH", "exp_no_space": "CR26XH"},
-        {"input": "dn55      1pt", "exp_space": "DN55 1PT", "exp_no_space": "DN551PT"},
+        {
+            "input": "cR26xh        ",
+            "exp_space": "CR2 6XH",
+            "exp_no_space": "CR26XH",
+        },
+        {
+            "input": "dn55      1pt",
+            "exp_space": "DN55 1PT",
+            "exp_no_space": "DN551PT",
+        },
         {"input": "w1a1hq", "exp_space": "W1A 1HQ", "exp_no_space": "W1A1HQ"},
         {
             "input": "e;C1,,a1b&=-^£%b",
@@ -26,7 +35,8 @@ class PostcodeHelperTest(TestCase):
     def test_without_spaces(self):
         for postcode in self.postcodes:
             self.assertEqual(
-                postcode["exp_no_space"], Postcode(postcode["input"]).without_space
+                postcode["exp_no_space"],
+                Postcode(postcode["input"]).without_space,
             )
 
     def test_create_from_object(self):

@@ -1,4 +1,5 @@
 import re
+
 from django.apps import apps
 from django.conf import settings
 
@@ -6,7 +7,9 @@ from django.conf import settings
 def get_model(const, default):
     model_str = getattr(settings, const, default)
     if not re.match("\w+\.\w+", model_str):
-        raise LookupError("%s setting must be of the form 'app.Model'" % (const))
+        raise LookupError(
+            "%s setting must be of the form 'app.Model'" % (const)
+        )
     return apps.get_model(*model_str.split("."))
 
 
@@ -33,8 +36,8 @@ class Postcode:
 
     def __eq__(self, other):
         return (
-            type(self) == Postcode
-            and type(other) == Postcode
+            isinstance(self, Postcode)
+            and isinstance(other, Postcode)
             and self.without_space == other.without_space
         )
 
@@ -146,9 +149,7 @@ class PAFAddressFormatter:
             and element[-1].isalpha()
         ):
             return True
-        if len(element) == 1 and element.isalpha():
-            return True
-        return False
+        return bool(len(element) == 1 and element.isalpha())
 
     def _append_to_label(self, element):
         """Append address element to the label.
@@ -242,9 +243,7 @@ class LocalAuthAddressFormatter:
         elif start_suffix and end_number:
             ao = ao + start_suffix
 
-        if end_suffix and end_number:
-            ao = ao + "-"
-        elif start_number and end_number:
+        if (end_suffix and end_number) or (start_number and end_number):
             ao = ao + "-"
 
         if end_number and not end_suffix:
@@ -289,7 +288,9 @@ class AddressSorter:
     def alphanum_key(self, tup):
         # split the desired component of tup (defined by key function)
         # into a listof numeric and text components
-        return [self.convert(c) for c in filter(None, re.split("([0-9]+)", tup[1]))]
+        return [
+            self.convert(c) for c in filter(None, re.split("([0-9]+)", tup[1]))
+        ]
 
     def swap_fields(self, item):
         lst = self.alphanum_key(item)

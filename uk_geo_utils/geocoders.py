@@ -1,11 +1,13 @@
 import abc
+
 from django.core.exceptions import ObjectDoesNotExist
+
 from uk_geo_utils.helpers import (
     AddressSorter,
+    Postcode,
     get_address_model,
     get_onspd_model,
     get_onsud_model,
-    Postcode,
 )
 
 
@@ -78,9 +80,9 @@ class AddressBaseGeocoder(BaseGeocoder):
                 "No addresses found for postcode %s" % (self.postcode)
             )
 
-        self._uprns = self.onsud_model.objects.filter(uprn__in=self.uprns).order_by(
-            "uprn"
-        )
+        self._uprns = self.onsud_model.objects.filter(
+            uprn__in=self.uprns
+        ).order_by("uprn")
 
     @property
     def uprns(self):
@@ -112,7 +114,9 @@ class AddressBaseGeocoder(BaseGeocoder):
         if len(self._uprns) == 0:
             # No records in the ONSUD table were found for the given UPRNs
             # because...reasons
-            raise CodesNotFoundException("Found no records in ONSUD for supplied UPRNs")
+            raise CodesNotFoundException(
+                "Found no records in ONSUD for supplied UPRNs"
+            )
         if len(self._addresses) != len(self._uprns):
             if strict:
                 for uprn in self.uprns:
@@ -126,15 +130,14 @@ class AddressBaseGeocoder(BaseGeocoder):
                 # if not strict, ignore this condition
                 pass
 
-        codes = set([getattr(u, code_type_field.attname) for u in self._uprns])
+        codes = {getattr(u, code_type_field.attname) for u in self._uprns}
         if len(codes) == 1:
             # all the uprns supplied are in the same area
             return list(codes)[0]
-        else:
-            raise MultipleCodesException(
-                "Postcode %s covers UPRNs in more than one '%s' area"
-                % (self.postcode, code_type)
-            )
+        raise MultipleCodesException(
+            "Postcode %s covers UPRNs in more than one '%s' area"
+            % (self.postcode, code_type)
+        )
 
 
 class OnspdGeocoder(BaseGeocoder):

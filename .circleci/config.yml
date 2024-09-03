@@ -1,33 +1,23 @@
 version: 2.1
 
 executors:
-  py38:
-    docker:
-      - image: cimg/python:3.8
-        environment:
-          CIRCLECI: true
-          PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test
-  py39:
-    docker:
-      - image: cimg/python:3.9
-        environment:
-          CIRCLECI: true
-          PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test
   py310:
     docker:
       - image: cimg/python:3.10
         environment:
           CIRCLECI: true
           PGHOST: 127.0.0.1
-      - image: cimg/postgres:12.13-postgis
+      - image: cimg/postgres:16.3-postgis
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test
+  py312:
+    docker:
+      - image: cimg/python:3.12
+        environment:
+          CIRCLECI: true
+          PGHOST: 127.0.0.1
+      - image: cimg/postgres:16.3-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: test
@@ -52,9 +42,10 @@ jobs:
             pip install -U pip .[development]
             sudo apt-get update && sudo apt-get install -y gdal-bin python3-gdal
       - run:
-          name: Black
+          name: Ruff
           command: |
-            black . --check
+            ruff check .
+            ruff format . --check
       - run:
           name: Run tests
           command: |
@@ -70,5 +61,5 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              python_version: [ py38, py39, py310 ]
-              django_version: [ ">=3.2,<4.0", ">=4.0,<4.1", ">=4.1,<4.2", ">=4.2,<4.3" ]
+              python_version: [ py310, py312 ]
+              django_version: [ ">=4.2,<4.3", ">=5.1,<5.2" ]

@@ -1,14 +1,17 @@
 import csv
-import os
 import glob
-from uk_geo_utils.helpers import PAFAddressFormatter, LocalAuthAddressFormatter
+import os
+
 from django.core.management.base import BaseCommand
+
+from uk_geo_utils.helpers import LocalAuthAddressFormatter, PAFAddressFormatter
 
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
-            "ab_path", help="The path to the folder containing the AddressBase CSVs"
+            "ab_path",
+            help="The path to the folder containing the AddressBase CSVs",
         )
 
     def handle(self, *args, **kwargs):
@@ -96,7 +99,9 @@ class Command(BaseCommand):
 
         files = glob.glob(os.path.join(self.base_path, "*.csv"))
         if not files:
-            raise FileNotFoundError("No CSV files found in %s" % (self.base_path))
+            raise FileNotFoundError(
+                "No CSV files found in %s" % (self.base_path)
+            )
 
         with open(out_path, "w") as out_file:
             for csv_path in files:
@@ -153,25 +158,24 @@ class Command(BaseCommand):
             kwargs = {k.lower(): line[k] for k in line if k in address_fields}
             kwargs["organisation_name"] = line["RM_ORGANISATION_NAME"]
             return PAFAddressFormatter(**kwargs).generate_address_label()
-        else:
-            address_fields = [
-                "SAO_START_NUMBER",
-                "SAO_START_SUFFIX",
-                "SAO_END_NUMBER",
-                "SAO_END_SUFFIX",
-                "SAO_TEXT",
-                "PAO_START_NUMBER",
-                "PAO_START_SUFFIX",
-                "PAO_END_NUMBER",
-                "PAO_END_SUFFIX",
-                "PAO_TEXT",
-                "STREET_DESCRIPTION",
-                "LOCALITY",
-                "TOWN_NAME",
-            ]
-            kwargs = {k.lower(): line[k] for k in line if k in address_fields}
-            kwargs["organisation_name"] = line["LA_ORGANISATION"]
-            return LocalAuthAddressFormatter(**kwargs).generate_address_label()
+        address_fields = [
+            "SAO_START_NUMBER",
+            "SAO_START_SUFFIX",
+            "SAO_END_NUMBER",
+            "SAO_END_SUFFIX",
+            "SAO_TEXT",
+            "PAO_START_NUMBER",
+            "PAO_START_SUFFIX",
+            "PAO_END_NUMBER",
+            "PAO_END_SUFFIX",
+            "PAO_TEXT",
+            "STREET_DESCRIPTION",
+            "LOCALITY",
+            "TOWN_NAME",
+        ]
+        kwargs = {k.lower(): line[k] for k in line if k in address_fields}
+        kwargs["organisation_name"] = line["LA_ORGANISATION"]
+        return LocalAuthAddressFormatter(**kwargs).generate_address_label()
 
     def clean_output_line(self, line):
         data = {}

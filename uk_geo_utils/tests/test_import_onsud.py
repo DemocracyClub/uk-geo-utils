@@ -1,8 +1,10 @@
 import os
 from io import StringIO
+
 from django.test import TestCase
-from uk_geo_utils.models import Onsud
+
 from uk_geo_utils.management.commands.import_onsud import Command
+from uk_geo_utils.models import Onsud
 
 
 class OnsudImportTest(TestCase):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
 import django.contrib.gis.db.models.fields
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "uprn",
-                    models.CharField(max_length=100, serialize=False, primary_key=True),
+                    models.CharField(
+                        max_length=100, serialize=False, primary_key=True
+                    ),
                 ),
                 ("address", models.TextField(blank=True)),
                 (
@@ -35,7 +37,9 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "uprn",
-                    models.CharField(max_length=12, serialize=False, primary_key=True),
+                    models.CharField(
+                        max_length=12, serialize=False, primary_key=True
+                    ),
                 ),
                 ("ctry_flag", models.CharField(max_length=1, blank=True)),
                 ("cty", models.CharField(max_length=9, blank=True)),

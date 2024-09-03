@@ -1,14 +1,17 @@
 import csv
-import os
 import glob
-from uk_geo_utils.helpers import PAFAddressFormatter
+import os
+
 from django.core.management.base import BaseCommand
+
+from uk_geo_utils.helpers import PAFAddressFormatter
 
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
-            "ab_path", help="The path to the folder containing the AddressBase CSVs"
+            "ab_path",
+            help="The path to the folder containing the AddressBase CSVs",
         )
 
     def handle(self, *args, **kwargs):
@@ -46,7 +49,9 @@ class Command(BaseCommand):
 
         files = glob.glob(os.path.join(self.base_path, "*.csv"))
         if not files:
-            raise FileNotFoundError("No CSV files found in %s" % (self.base_path))
+            raise FileNotFoundError(
+                "No CSV files found in %s" % (self.base_path)
+            )
 
         with open(out_path, "w") as out_file:
             for csv_path in files:
