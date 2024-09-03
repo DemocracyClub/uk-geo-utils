@@ -1,5 +1,12 @@
 # Changelog
 
+## :package: [0.13.0](https://pypi.org/project/uk-geo-utils/0.13.0/) - 2024-09-03
+
+* Fix help text for `import_cleaned_addresses` command 
+* Tested on Python 3.10/3.12, drop Python<3.10
+* Tested on Django 4.2/5.1, drop Django<4.2
+* Tested against Postgres 16
+
 ## :package: [0.12.0](https://pypi.org/project/uk-geo-utils/0.12.0/) - 2023-07-21
 
 * Tested on Django 4.2
