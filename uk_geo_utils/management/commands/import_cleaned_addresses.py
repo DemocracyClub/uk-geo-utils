@@ -8,9 +8,9 @@ from uk_geo_utils.helpers import get_address_model
 
 class Command(BaseCommand):
     help = (
-        "Deletes all data in Address model AND any related tables,",
-        "and replaces Address model data with that in the cleaned AddressBase CSVs.",
-        "Data in related tables will need to be imported/rebuilt seperately",
+        "Deletes all data in Address model AND any related tables,"
+        "and replaces Address model data with that in the cleaned AddressBase CSVs."
+        "Data in related tables will need to be imported/rebuilt seperately"
     )
 
     def add_arguments(self, parser):
