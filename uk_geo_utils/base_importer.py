@@ -50,23 +50,13 @@ class BaseImporter(BaseCommand):
     def get_table_name(self) -> str:
         pass
 
-    @abc.abstractmethod
-    def get_importer(self):
-        # make sure table name is set to temp table.
-        # Can be a no-op and run_importer can implement import logic
-        pass
-
-    @abc.abstractmethod
-    def run_importer(self, cmd):
-        pass
-
     def get_data_path(self, options):
         data_path = None
 
-        if options["data_path"]:
+        if options.get("data_path"):
             self.data_path = options["data_path"]
 
-        if url := options["url"]:
+        if url := options.get("url"):
             self.stdout.write(f"Downloading data from {url}")
             tmp = tempfile.NamedTemporaryFile()
             urllib.request.urlretrieve(url, tmp.name)
@@ -75,10 +65,9 @@ class BaseImporter(BaseCommand):
 
         return data_path
 
+    @abc.abstractmethod
     def import_data_to_temp_table(self):
-        self.stdout.write("Importing data...")
-        cmd = self.get_importer()
-        self.run_importer(cmd)
+        pass
 
     def get_index_statements(self):
         self.cursor.execute(f"""

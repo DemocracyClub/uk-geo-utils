@@ -1,9 +1,9 @@
 import glob
 import os
 
-from django.core.management.base import BaseCommand
-from django.db import connection, transaction
+from django.db import connection
 
+from uk_geo_utils.base_importer import BaseImporter
 from uk_geo_utils.helpers import get_onspd_model
 
 HEADERS = {
@@ -27,26 +27,16 @@ HEADERS = {
 }
 
 
-class Command(BaseCommand):
+class Command(BaseImporter):
     """
     To import ONSPD, grab the latest release:
     https://ons.maps.arcgis.com/home/search.html?t=content&q=ONS%20Postcode%20Directory
-    and run
-    python manage.py import_onspd /path/to/data
+    and run:
+        python manage.py update_onspd --data-path /path/to/ONSPD_MAY_2024/Data
     """
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "path", help="Path to the directory containing the ONSPD CSVs"
-        )
-        parser.add_argument(
-            "-t",
-            "--transaction",
-            help="Run the import in a transaction",
-            action="store_true",
-            default=False,
-            dest="transaction",
-        )
+        super().add_arguments(parser)
 
         parser.add_argument(
             "--header",
@@ -55,25 +45,21 @@ class Command(BaseCommand):
             choices=["may2018", "aug2022"],
         )
 
-    def handle(self, *args, **kwargs):
-        self.table_name = get_onspd_model()._meta.db_table
-        self.path = kwargs["path"]
-        self.header = HEADERS[kwargs.get("header", "aug2022")]
-        if kwargs["transaction"]:
-            with transaction.atomic():
-                self.import_onspd()
-        else:
-            self.import_onspd()
+    def get_table_name(self):
+        return get_onspd_model()._meta.db_table
 
-    def import_onspd(self):
-        glob_str = os.path.join(self.path, "*.csv")
+    def import_data_to_temp_table(self):
+        self.import_onspd(self.temp_table_name)
+
+    def import_onspd(self, table_name):
+        glob_str = os.path.join(self.data_path, "*.csv")
         files = glob.glob(glob_str)
         if not files:
-            raise FileNotFoundError("No CSV files found in %s" % (self.path))
+            raise FileNotFoundError(
+                "No CSV files found in %s" % (self.data_path)
+            )
 
         cursor = connection.cursor()
-        self.stdout.write("clearing existing data..")
-        cursor.execute("TRUNCATE TABLE %s;" % (self.table_name))
 
         self.stdout.write("importing from files..")
         for f in files:
@@ -85,7 +71,7 @@ class Command(BaseCommand):
                     %s
                     ) FROM STDIN (FORMAT CSV, DELIMITER ',', quote '"', HEADER);
                 """
-                    % (self.table_name, self.header),
+                    % (table_name, self.header),
                     fp,
                 )
 
@@ -98,7 +84,12 @@ class Command(BaseCommand):
                 ELSE ST_GeomFromText('POINT(' || "long" || ' ' || lat || ')',4326)
             END
         """
-            % (self.table_name)
+            % (table_name)
         )
 
         self.stdout.write("...done")
+
+    def handle(self, **options):
+        self.header = HEADERS[options.get("header", "aug2022")]
+
+        super().handle(**options)

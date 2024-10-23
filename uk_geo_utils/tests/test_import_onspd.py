@@ -27,7 +27,11 @@ class May2018OnspdImportTest(TestCase):
         cmd.stdout = StringIO()
 
         # import data
-        opts = {"path": csv_path, "transaction": False, "header": "may2018"}
+        opts = {
+            "data_path": csv_path,
+            "header": "may2018",
+        }
+
         cmd.handle(**opts)
 
         # ensure all our tasty data has been imported
@@ -56,7 +60,7 @@ class May2018OnspdImportTest(TestCase):
         # supress output
         cmd.stdout = StringIO()
 
-        opts = {"path": csv_path, "transaction": False}
+        opts = {"data_path": csv_path}
         with self.assertRaises(FileNotFoundError):
             cmd.handle(**opts)
 
@@ -80,7 +84,10 @@ class Aug2022OnspdImportTest(TestCase):
         cmd.stdout = StringIO()
 
         # import data
-        opts = {"path": csv_path, "transaction": False, "header": "aug2022"}
+        opts = {
+            "data_path": csv_path,
+            "header": "aug2022",
+        }
         cmd.handle(**opts)
 
         # ensure all our tasty data has been imported
@@ -109,6 +116,9 @@ class Aug2022OnspdImportTest(TestCase):
         # supress output
         cmd.stdout = StringIO()
 
-        opts = {"path": csv_path, "transaction": False, "header": "aug2022"}
+        opts = {
+            "data_path": csv_path,
+            "header": "aug2022",
+        }
         with self.assertRaises(FileNotFoundError):
             cmd.handle(**opts)
