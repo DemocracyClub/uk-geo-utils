@@ -32,7 +32,7 @@ setup(
     description="Django app for working with OS Addressbase, ONSUD and ONSPD",
     long_description=_get_description(),
     long_description_content_type="text/markdown",
-    install_requires=["Django>=4.2", "psycopg2-binary"],
+    install_requires=["Django>=4.2", "psycopg2-binary", "psutil"],
     extras_require={"development": ["coveralls", "mkdocs", "ruff==0.6.2"]},
     classifiers=[
         "Framework :: Django",
