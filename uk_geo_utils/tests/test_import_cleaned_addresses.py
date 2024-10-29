@@ -26,7 +26,7 @@ class CleanedAddressImportTest(TestCase):
         cmd.stdout = StringIO()
 
         # import data
-        opts = {"cleaned_ab_path": csv_path, "transaction": False}
+        opts = {"data_path": csv_path}
         cmd.handle(**opts)
 
         # ensure all our tasty data has been imported
@@ -45,6 +45,6 @@ class CleanedAddressImportTest(TestCase):
         # supress output
         cmd.stdout = StringIO()
 
-        opts = {"cleaned_ab_path": csv_path, "transaction": False}
+        opts = {"data_path": csv_path}
         with self.assertRaises(FileNotFoundError):
             cmd.handle(**opts)
