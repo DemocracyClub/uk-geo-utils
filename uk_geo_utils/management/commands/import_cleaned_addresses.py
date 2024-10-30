@@ -26,8 +26,6 @@ class Command(BaseImporter):
 
         with open(cleaned_file_path, "r") as fp:
             cursor = connection.cursor()
-            self.stdout.write("clearing existing data..")
-            cursor.execute("TRUNCATE TABLE %s CASCADE;" % (self.table_name))
 
             self.stdout.write("importing from %s.." % (cleaned_file_path))
             cursor.copy_expert(
