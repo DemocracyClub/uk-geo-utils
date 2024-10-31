@@ -1,5 +1,9 @@
 # Changelog
 
+## :package: [0.14.0](https://pypi.org/project/uk-geo-utils/0.14.0/) - 2024-10-31
+
+* Implement new `BaseImporter` class improving the performance of `import_` commands
+
 ## :package: [0.13.0](https://pypi.org/project/uk-geo-utils/0.13.0/) - 2024-09-03
 
 * Fix help text for `import_cleaned_addresses` command 
