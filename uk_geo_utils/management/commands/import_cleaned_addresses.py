@@ -1,7 +1,5 @@
 import os
 
-from django.db import connection
-
 from uk_geo_utils.base_importer import BaseImporter
 from uk_geo_utils.helpers import get_address_model
 
@@ -25,10 +23,8 @@ class Command(BaseImporter):
         )
 
         with open(cleaned_file_path, "r") as fp:
-            cursor = connection.cursor()
-
             self.stdout.write("importing from %s.." % (cleaned_file_path))
-            cursor.copy_expert(
+            self.cursor.copy_expert(
                 """
                 COPY %s (UPRN,address,postcode,location,addressbase_postal)
                 FROM STDIN (FORMAT CSV, DELIMITER ',', quote '"');

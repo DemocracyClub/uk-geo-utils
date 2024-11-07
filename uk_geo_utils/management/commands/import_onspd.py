@@ -2,7 +2,6 @@ import glob
 import os
 
 from django.core.management import CommandError
-from django.db import connection
 
 from uk_geo_utils.base_importer import BaseImporter
 from uk_geo_utils.helpers import get_onspd_model
@@ -77,14 +76,12 @@ class Command(BaseImporter):
                 "No CSV files found in %s" % (self.data_path)
             )
 
-        cursor = connection.cursor()
-
         self.stdout.write("importing from files..")
         for f in files:
             header = self.check_header(f)
             self.stdout.write(f"Importing {f}")
             with open(f, "r") as fp:
-                cursor.copy_expert(
+                self.cursor.copy_expert(
                     """
                     COPY %s (
                     %s
@@ -95,7 +92,7 @@ class Command(BaseImporter):
                 )
 
         # turn text lng/lat into a Point() field
-        cursor.execute(
+        self.cursor.execute(
             """
             UPDATE %s SET location=CASE
                 WHEN ("long"='0.000000' AND lat='99.999999')
