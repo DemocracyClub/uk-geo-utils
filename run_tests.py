@@ -24,7 +24,15 @@ if not settings.configured:
                 "PASSWORD": "",
                 "HOST": "localhost",
                 "PORT": "",
-            }
+            },
+            "other": {
+                "ENGINE": "django.contrib.gis.db.backends.postgis",
+                "NAME": "test_other",
+                "USER": "postgres",
+                "PASSWORD": "",
+                "HOST": "localhost",
+                "PORT": "",
+            },
         },
         INSTALLED_APPS=("uk_geo_utils",),
     )
