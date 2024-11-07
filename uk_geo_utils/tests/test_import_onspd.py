@@ -2,6 +2,7 @@ import os
 from io import StringIO
 
 from django.contrib.gis.geos import Point
+from django.db import DEFAULT_DB_ALIAS
 from django.test import TestCase
 
 from uk_geo_utils.management.commands.import_onspd import Command
@@ -30,6 +31,7 @@ class May2018OnspdImportTest(TestCase):
         opts = {
             "data_path": csv_path,
             "header": "may2018",
+            "database": DEFAULT_DB_ALIAS,
         }
 
         cmd.handle(**opts)
@@ -60,7 +62,7 @@ class May2018OnspdImportTest(TestCase):
         # supress output
         cmd.stdout = StringIO()
 
-        opts = {"data_path": csv_path}
+        opts = {"data_path": csv_path, "database": DEFAULT_DB_ALIAS}
         with self.assertRaises(FileNotFoundError):
             cmd.handle(**opts)
 
@@ -87,6 +89,7 @@ class Aug2022OnspdImportTest(TestCase):
         opts = {
             "data_path": csv_path,
             "header": "aug2022",
+            "database": DEFAULT_DB_ALIAS,
         }
         cmd.handle(**opts)
 
@@ -119,6 +122,7 @@ class Aug2022OnspdImportTest(TestCase):
         opts = {
             "data_path": csv_path,
             "header": "aug2022",
+            "database": DEFAULT_DB_ALIAS,
         }
         with self.assertRaises(FileNotFoundError):
             cmd.handle(**opts)

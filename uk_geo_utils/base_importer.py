@@ -7,7 +7,7 @@ from pathlib import Path
 
 import psutil
 from django.core.management.base import BaseCommand
-from django.db import connection, transaction
+from django.db import DEFAULT_DB_ALIAS, connections, transaction
 
 
 def unzip(filepath):
@@ -37,7 +37,7 @@ class BaseImporter(BaseCommand):
         self.primary_key_constraint = None
         self.tempdir = None
         self.data_path = None
-        self.cursor = connection.cursor()
+        self.cursor = None
         self.table_name = self.get_table_name()
         self.temp_table_name = self.table_name + "_temp"
 
@@ -45,6 +45,7 @@ class BaseImporter(BaseCommand):
         group = parser.add_mutually_exclusive_group(required=True)
         group.add_argument("--url", action="store")
         group.add_argument("--data-path", action="store")
+        parser.add_argument("--database", default=DEFAULT_DB_ALIAS)
 
     @abc.abstractmethod
     def get_table_name(self) -> str:
@@ -314,11 +315,14 @@ class BaseImporter(BaseCommand):
         self.foreign_key_constraints = self.get_foreign_key_constraints()
         self.check_for_other_constraints()
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         if not check_memory():
             raise Exception(
                 "This instance has less than the recommended memory. Try running the import from a larger instance."
             )
+
+        db_name = options["database"]
+        self.cursor = connections[db_name].cursor()
 
         self.get_data_path(options)
 
