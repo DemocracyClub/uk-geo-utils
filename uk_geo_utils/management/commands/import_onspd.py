@@ -1,30 +1,11 @@
 import glob
 import os
 
+from django.core.management import CommandError
 from django.db import connection
 
 from uk_geo_utils.base_importer import BaseImporter
 from uk_geo_utils.helpers import get_onspd_model
-
-HEADERS = {
-    "may2018": """
-        pcd, pcd2, pcds, dointr, doterm, oscty, ced, oslaua, osward,
-        parish, usertype, oseast1m, osnrth1m, osgrdind, oshlthau,
-        nhser, ctry, rgn, streg, pcon, eer, teclec, ttwa, pct, nuts,
-        statsward, oa01, casward, park, lsoa01, msoa01, ur01ind,
-        oac01, oa11, lsoa11, msoa11, wz11, ccg, bua11, buasd11,
-        ru11ind, oac11, lat, long, lep1, lep2, pfa, imd, calncv, stp
-        """,
-    "aug2022": """
-        pcd, pcd2, pcds, dointr, doterm, oscty, ced, oslaua, osward,
-        parish, usertype, oseast1m, osnrth1m, osgrdind, oshlthau,
-        nhser, ctry, rgn, streg, pcon, eer, teclec, ttwa, pct, nuts,
-        statsward, oa01, casward, park, lsoa01, msoa01, ur01ind,
-        oac01, oa11, lsoa11, msoa11, wz11, ccg, bua11, buasd11,
-        ru11ind, oac11, lat, long, lep1, lep2, pfa, imd, calncv, stp,
-        oa21, lsoa21, msoa21
-        """,
-}
 
 
 class Command(BaseImporter):
@@ -35,21 +16,60 @@ class Command(BaseImporter):
         python manage.py update_onspd --data-path /path/to/ONSPD_MAY_2024/Data
     """
 
-    def add_arguments(self, parser):
-        super().add_arguments(parser)
-
-        parser.add_argument(
-            "--header",
-            help="Specify which header the csv has",
-            default="aug2022",
-            choices=["may2018", "aug2022"],
-        )
+    def __init__(
+        self, stdout=None, stderr=None, no_color=False, force_color=False
+    ):
+        super().__init__(stdout, stderr, no_color, force_color)
+        self.derived_fields = ["location"]
 
     def get_table_name(self):
         return get_onspd_model()._meta.db_table
 
     def import_data_to_temp_table(self):
         self.import_onspd(self.temp_table_name)
+
+    def check_header(self, f):
+        self.stdout.write(f"checking header of {f}")
+        with open(f, "r") as fp:
+            # get field names from file
+            header_row = fp.readline()
+            file_header = sorted([f.strip() for f in header_row.split(",")])
+
+            # get field names from db excluding derived fields (i.e. location)
+            expected_header = sorted(
+                [
+                    field.name
+                    for field in get_onspd_model()._meta.get_fields()
+                    if field.name not in self.derived_fields
+                ]
+            )
+
+            if file_header == expected_header:
+                self.stdout.write(self.style.SUCCESS("✓ Headers match"))
+                return header_row
+
+            # find missing and unexpected fields
+            missing_fields = set(expected_header) - set(file_header)
+            unexpected_fields = set(file_header) - set(expected_header)
+
+            error_msg = [
+                f"\nProblem with the fields in {f}",
+                f"  File header: {file_header}",
+                f"  Expected header: {expected_header}",
+            ]
+            if missing_fields:
+                error_msg.append("  Fields missing from file:")
+                for field in sorted(missing_fields):
+                    error_msg.append(f"  - {field}")
+
+            if unexpected_fields:
+                error_msg.append("  Unexpected fields found in file:")
+                for field in sorted(unexpected_fields):
+                    error_msg.append(f"  + {field}")
+            error_msg.append(
+                "This probably means ONSPD has changed they're csv format and we need to update our import command."
+            )
+            raise CommandError("\n".join(error_msg))
 
     def import_onspd(self, table_name):
         glob_str = os.path.join(self.data_path, "*.csv")
@@ -63,15 +83,16 @@ class Command(BaseImporter):
 
         self.stdout.write("importing from files..")
         for f in files:
-            self.stdout.write(f)
+            header = self.check_header(f)
+            self.stdout.write(f"Importing {f}")
             with open(f, "r") as fp:
                 cursor.copy_expert(
                     """
                     COPY %s (
                     %s
-                    ) FROM STDIN (FORMAT CSV, DELIMITER ',', quote '"', HEADER);
+                    ) FROM STDIN (FORMAT CSV, DELIMITER ',', quote '"', HEADER MATCH);
                 """
-                    % (table_name, self.header),
+                    % (table_name, header),
                     fp,
                 )
 
@@ -90,6 +111,4 @@ class Command(BaseImporter):
         self.stdout.write("...done")
 
     def handle(self, **options):
-        self.header = HEADERS[options.get("header", "aug2022")]
-
         super().handle(**options)
