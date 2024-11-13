@@ -1,5 +1,10 @@
 # Changelog
 
+## :package: [0.15.0](https://pypi.org/project/uk-geo-utils/0.15.0/) - 2024-11-13
+
+* Add `--database` flag to base importer, for projects with more than one db.
+* Move ONSPD model to match August 2024 Schema
+
 ## :package: [0.14.0](https://pypi.org/project/uk-geo-utils/0.14.0/) - 2024-10-31
 
 * Implement new `BaseImporter` class improving the performance of `import_` commands
