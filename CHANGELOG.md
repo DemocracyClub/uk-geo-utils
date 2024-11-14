@@ -1,5 +1,9 @@
 # Changelog
 
+## :package: [0.16.0](https://pypi.org/project/uk-geo-utils/0.15.0/) - 2024-11-14
+
+* Fix issue with imports on replicating dbs
+
 ## :package: [0.15.0](https://pypi.org/project/uk-geo-utils/0.15.0/) - 2024-11-13
 
 * Add `--database` flag to base importer, for projects with more than one db.
