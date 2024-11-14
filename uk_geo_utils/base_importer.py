@@ -244,7 +244,7 @@ class BaseImporter(BaseCommand):
         )
         self.cursor.execute(f"DROP TABLE IF EXISTS {self.temp_table_name};")
         self.cursor.execute(
-            f"CREATE TABLE {self.temp_table_name} AS SELECT * FROM {self.table_name} LIMIT 0;"
+            f"CREATE UNLOGGED TABLE {self.temp_table_name} AS SELECT * FROM {self.table_name} LIMIT 0;"
         )
 
     def drop_old_table(self):
