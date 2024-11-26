@@ -243,9 +243,16 @@ class BaseImporter(BaseCommand):
             f"Creating temp table called {self.temp_table_name}..."
         )
         self.cursor.execute(f"DROP TABLE IF EXISTS {self.temp_table_name};")
-        self.cursor.execute(
-            f"CREATE UNLOGGED TABLE {self.temp_table_name} AS SELECT * FROM {self.table_name} LIMIT 0;"
+        create_statement = f"CREATE TABLE {self.temp_table_name} AS SELECT * FROM {self.table_name} LIMIT 0;"
+        self.stdout.write(f"Executing: {create_statement}")
+        self.cursor.execute(create_statement)
+
+    def alter_temp_table_replica_identity(self, identity):
+        alter_table_statment = (
+            f"ALTER TABLE {self.temp_table_name} REPLICA IDENTITY {identity};"
         )
+        self.stdout.write(f"Executing: {alter_table_statment}")
+        self.cursor.execute(alter_table_statment)
 
     def drop_old_table(self):
         self.stdout.write("Dropping old table...")
@@ -332,6 +339,9 @@ class BaseImporter(BaseCommand):
             # Create empty temp tables
             self.create_temp_table()
 
+            # Set temp table replica identity to full
+            self.alter_temp_table_replica_identity("FULL")
+
             # import data into the temp table
             self.import_data_to_temp_table()
 
@@ -340,6 +350,9 @@ class BaseImporter(BaseCommand):
 
             # Add temp indexes
             self.build_temp_indexes()
+
+            # Set temp table replica identity to default
+            self.alter_temp_table_replica_identity("DEFAULT")
 
             with transaction.atomic():
                 # Drop Foreign keys
@@ -363,6 +376,14 @@ class BaseImporter(BaseCommand):
         self.stdout.write("...done")
 
     def db_cleanup(self):
+        self.stdout.write(
+            f"Make sure {self.table_name} is set to replicate identity default"
+        )
+        alter_table_statment = (
+            f"ALTER TABLE {self.table_name} REPLICA IDENTITY DEFAULT;"
+        )
+        self.stdout.write(f"Executing: {alter_table_statment}")
+        self.cursor.execute(alter_table_statment)
         self.stdout.write("Dropping temp table if exists...")
         self.cursor.execute(
             f"DROP TABLE IF EXISTS {self.temp_table_name} CASCADE;"
