@@ -329,9 +329,12 @@ class BaseImporter(BaseCommand):
             )
 
         db_name = options["database"]
-        connection = connections[db_name]
-        self.cursor = connection.cursor()
-        self.stdout.write(f"Connected to: {connection.settings_dict['NAME']} @ {connection.settings_dict['HOST'] if connection.settings_dict['HOST'] else 'localhost'}")
+        self.connection = connections[db_name]
+        self.cursor = self.connection.cursor()
+
+        self.stdout.write(
+            f"Connected to: {self.connection.settings_dict['NAME']} @ {self.connection.settings_dict['HOST'] if self.connection.settings_dict['HOST'] else 'localhost'}"
+        )
 
         self.get_data_path(options)
 
@@ -374,6 +377,7 @@ class BaseImporter(BaseCommand):
         finally:
             self.db_cleanup()
             self.file_cleanup()
+            self.report_on_replicaton_status()
 
         self.stdout.write("...done")
 
@@ -386,6 +390,7 @@ class BaseImporter(BaseCommand):
         )
         self.stdout.write(f"Executing: {alter_table_statment}")
         self.cursor.execute(alter_table_statment)
+
         self.stdout.write("Dropping temp table if exists...")
         self.cursor.execute(
             f"DROP TABLE IF EXISTS {self.temp_table_name} CASCADE;"
@@ -398,3 +403,57 @@ class BaseImporter(BaseCommand):
                 shutil.rmtree(self.tempdir)
             except OSError:
                 self.stdout.write("Failed to clean up temp files.")
+
+    def report_on_replicaton_status(self):
+        if not self.connection.settings_dict["HOST"]:
+            self.stdout.write(
+                "Command appears to have been run against a local database. Skipping replication checks."
+            )
+            return
+        dbname = self.cursor.db.connection.info.dbname
+        query_statement = f"""
+            SELECT slot_name, wal_status, active, conflicting 
+            FROM pg_replication_slots
+            WHERE database = '{dbname}';
+        """
+        self.cursor.execute(query_statement)
+        results = self.cursor.fetchall()
+        if not results:
+            self.stdout.write(
+                self.style.NOTICE(
+                    "No replication slots found. If you think there should be some either the --database flag was wrong, or something has broken.",
+                )
+            )
+            return
+
+        columns = [desc[0] for desc in self.cursor.description]
+        result_dicts = []
+        for row in results:
+            result_dicts.append(dict(zip(columns, row)))
+
+        self.stdout.write(self.style.SQL_TABLE("Replication status:"))
+        broken_slots = False
+        for result in result_dicts:
+            if result["active"] and not result["conflicting"]:
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"{result['slot_name']} is active and is not conflicting. 'wal_status' is {result['wal_status']}."
+                    )
+                )
+            else:
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"{result['slot_name']} Doesn't seem healthy:"
+                        f"\n    'active': {result['active']}."
+                        f"\n    'wal_status': {result['wal_status']}."
+                        f"\n    'conflicting': {result['conflicting']}."
+                    )
+                )
+                broken_slots = True
+
+        if broken_slots:
+            self.stdout.write(
+                self.style.NOTICE(
+                    "Some replication slots are broken. You can probably fix this by cycling out the instances."
+                )
+            )
