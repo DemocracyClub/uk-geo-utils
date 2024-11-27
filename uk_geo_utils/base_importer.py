@@ -329,7 +329,9 @@ class BaseImporter(BaseCommand):
             )
 
         db_name = options["database"]
-        self.cursor = connections[db_name].cursor()
+        connection = connections[db_name]
+        self.cursor = connection.cursor()
+        self.stdout.write(f"Connected to: {connection.settings_dict['NAME']} @ {connection.settings_dict['HOST'] if connection.settings_dict['HOST'] else 'localhost'}")
 
         self.get_data_path(options)
 
