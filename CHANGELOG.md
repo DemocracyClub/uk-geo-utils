@@ -1,6 +1,12 @@
 # Changelog
 
-## :package: [0.16.0](https://pypi.org/project/uk-geo-utils/0.15.0/) - 2024-11-14
+## :package: [0.17.0](https://pypi.org/project/uk-geo-utils/0.17.0/) - 2024-12-03
+
+* Don't create temp tables as unlogged.
+* Instead set the replica identity to full before input, then change back to default after table name change.
+* This breaks replication, so also print a report about this after doing data import.
+
+## :package: [0.16.0](https://pypi.org/project/uk-geo-utils/0.16.0/) - 2024-11-14
 
 * Fix issue with imports on replicating dbs
 
