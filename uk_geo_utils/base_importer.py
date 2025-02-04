@@ -359,7 +359,7 @@ class BaseImporter(BaseCommand):
             # Set temp table replica identity to default
             self.alter_temp_table_replica_identity("DEFAULT")
 
-            with transaction.atomic():
+            with transaction.atomic(using=db_name):
                 # Drop Foreign keys
                 if self.foreign_key_constraints:
                     self.drop_foreign_keys()
