@@ -1,5 +1,9 @@
 # Changelog
 
+## :package: [0.17.1](https://pypi.org/project/uk-geo-utils/0.17.1/) - 2025-02-10
+
+* Use correct DB connection for transaction
+
 ## :package: [0.17.0](https://pypi.org/project/uk-geo-utils/0.17.0/) - 2024-12-03
 
 * Don't create temp tables as unlogged.
