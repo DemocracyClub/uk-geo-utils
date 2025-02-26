@@ -158,7 +158,7 @@ class AbstractOnspd(models.Model):
     lsoa11 = models.CharField(blank=True, max_length=9)
     msoa11 = models.CharField(blank=True, max_length=9)
     wz11 = models.CharField(blank=True, max_length=9)
-    bua22 = models.CharField(blank=True, max_length=9)
+    bua24 = models.CharField(blank=True, max_length=9)
     ru11ind = models.CharField(blank=True, max_length=2)
     oac11 = models.CharField(blank=True, max_length=3)
     lat = models.CharField(blank=True, max_length=10)
