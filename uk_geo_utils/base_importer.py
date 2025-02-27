@@ -170,7 +170,7 @@ class BaseImporter(BaseCommand):
                     conrelid = '{self.table_name}'::regclass 
                     OR
                     confrelid = '{self.table_name}'::regclass
-                )      
+                )
         """
         self.cursor.execute(fkey_sql)
         results = self.cursor.fetchall()
