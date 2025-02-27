@@ -1,5 +1,9 @@
 # Changelog
 
+## :package: [0.18.0](https://pypi.org/project/uk-geo-utils/0.18.0/) - 2025-02-27
+
+* Move ONSPD model to match November 2024 Schema
+
 ## :package: [0.17.1](https://pypi.org/project/uk-geo-utils/0.17.1/) - 2025-02-10
 
 * Use correct DB connection for transaction
