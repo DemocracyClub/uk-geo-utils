@@ -62,4 +62,4 @@ workflows:
           matrix:
             parameters:
               python_version: [ py310, py312 ]
-              django_version: [ ">=4.2,<4.3", ">=5.1,<5.2" ]
+              django_version: [ ">=4.2,<4.3", ">=5.1,<5.3" ]
