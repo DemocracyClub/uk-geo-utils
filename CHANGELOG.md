@@ -1,5 +1,10 @@
 # Changelog
 
+## :package: [0.19.0](https://pypi.org/project/uk-geo-utils/0.19.0/) - 2025-02-27
+
+* Move ONSPD model to match November 2025 Schema
+* Tested on Django 5.2. Drop 5.1.
+
 ## :package: [0.18.0](https://pypi.org/project/uk-geo-utils/0.18.0/) - 2025-02-27
 
 * Move ONSPD model to match November 2024 Schema
