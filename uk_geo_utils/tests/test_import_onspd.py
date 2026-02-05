@@ -16,7 +16,7 @@ class OnspdImportTest(TestCase):
         self.csv_path = os.path.abspath(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)),
-                "../fixtures/onspd_aug2024",
+                "../fixtures/onspd_nov2025",
             )
         )
         self.cmd = Command()
@@ -37,9 +37,9 @@ class OnspdImportTest(TestCase):
         self.assertEqual(4, Onspd.objects.count())
 
         # row with valid grid ref should have valid Point() location
-        al11aa = Onspd.objects.filter(pcds="AL1 1AA")[0]
+        ab10aa = Onspd.objects.filter(pcds="AB1 0AA")[0]
         self.assertEqual(
-            Point(-0.341337, 51.749084, srid=4326), al11aa.location
+            Point(-2.242858, 57.101459, srid=4326), ab10aa.location
         )
 
         # row with invalid grid ref should have NULL location
@@ -88,7 +88,7 @@ class MultiDBOnspdImportTest(TransactionTestCase):
         self.csv_path = os.path.abspath(
             os.path.join(
                 os.path.dirname(os.path.abspath(__file__)),
-                "../fixtures/onspd_aug2024",
+                "../fixtures/onspd_nov2025",
             )
         )
         self.cmd = Command()
