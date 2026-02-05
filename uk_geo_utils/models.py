@@ -121,59 +121,218 @@ class Onsud(AbstractOnsud):
 
 
 class AbstractOnspd(models.Model):
-    pcd = models.CharField(blank=True, max_length=7)
-    pcd2 = models.CharField(blank=True, max_length=8)
-    pcds = models.CharField(blank=True, max_length=8, primary_key=True)
-    dointr = models.CharField(blank=True, max_length=6)
-    doterm = models.CharField(blank=True, max_length=6)
-    oscty = models.CharField(blank=True, max_length=9)
-    ced = models.CharField(blank=True, max_length=9)
-    oslaua = models.CharField(blank=True, max_length=9)
-    osward = models.CharField(blank=True, max_length=9)
-    parish = models.CharField(blank=True, max_length=9)
-    usertype = models.CharField(blank=True, max_length=1)
-    oseast1m = models.CharField(blank=True, max_length=6)
-    osnrth1m = models.CharField(blank=True, max_length=7)
-    osgrdind = models.CharField(blank=True, max_length=1)
-    oshlthau = models.CharField(blank=True, max_length=9)
-    nhser = models.CharField(blank=True, max_length=9)
-    ctry = models.CharField(blank=True, max_length=9)
-    rgn = models.CharField(blank=True, max_length=9)
-    streg = models.CharField(blank=True, max_length=1)
-    pcon = models.CharField(blank=True, max_length=9)
-    eer = models.CharField(blank=True, max_length=9)
-    teclec = models.CharField(blank=True, max_length=9)
-    ttwa = models.CharField(blank=True, max_length=9)
-    pct = models.CharField(blank=True, max_length=9)
-    itl = models.CharField(blank=True, max_length=10)
-    statsward = models.CharField(blank=True, max_length=6)
-    oa01 = models.CharField(blank=True, max_length=10)
-    casward = models.CharField(blank=True, max_length=6)
-    npark = models.CharField(blank=True, max_length=9)
-    lsoa01 = models.CharField(blank=True, max_length=9)
-    msoa01 = models.CharField(blank=True, max_length=9)
-    ur01ind = models.CharField(blank=True, max_length=1)
-    oac01 = models.CharField(blank=True, max_length=3)
-    oa11 = models.CharField(blank=True, max_length=9)
-    lsoa11 = models.CharField(blank=True, max_length=9)
-    msoa11 = models.CharField(blank=True, max_length=9)
-    wz11 = models.CharField(blank=True, max_length=9)
-    bua24 = models.CharField(blank=True, max_length=9)
-    ru11ind = models.CharField(blank=True, max_length=2)
-    oac11 = models.CharField(blank=True, max_length=3)
-    lat = models.CharField(blank=True, max_length=10)
-    long = models.CharField(blank=True, max_length=10)
-    lep1 = models.CharField(blank=True, max_length=9)
-    lep2 = models.CharField(blank=True, max_length=9)
-    pfa = models.CharField(blank=True, max_length=9)
-    imd = models.CharField(blank=True, max_length=5)
-    calncv = models.CharField(blank=True, max_length=9)
-    oa21 = models.CharField(blank=True, max_length=9)
-    lsoa21 = models.CharField(blank=True, max_length=9)
-    msoa21 = models.CharField(blank=True, max_length=9)
-    icb = models.CharField(blank=True, max_length=9)
-    sicbl = models.CharField(blank=True, max_length=9)
-    sicbl = models.CharField(blank=True, max_length=9)
+    pcd7 = models.CharField(
+        blank=True,
+        max_length=7,
+        help_text="Unit postcode – 7 character version",
+    )
+    pcd8 = models.CharField(
+        blank=True,
+        max_length=8,
+        help_text="Unit postcode – 8 character version",
+    )
+    pcds = models.CharField(
+        blank=True,
+        max_length=8,
+        primary_key=True,
+        help_text="Unit postcode - variable length (e-Gif) version",
+    )
+    dointr = models.CharField(
+        blank=True, max_length=6, help_text="Date of introduction"
+    )
+    doterm = models.CharField(
+        blank=True, max_length=6, help_text="Date of termination"
+    )
+    cty25cd = models.CharField(blank=True, max_length=9, help_text="County")
+    ced25cd = models.CharField(
+        blank=True, max_length=9, help_text="County Electoral Division"
+    )
+    lad25cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Local authority district (LAD): unitary authority (UA)/non- metroploitan district (NMD)/metropolitan district (MD)/London borough (LB)/council area (CA)/district council area (DCA)",
+    )
+    wd25cd = models.CharField(
+        blank=True, max_length=9, help_text="(Electoral) ward/division"
+    )
+    parncp25cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Civil parish/non-civil parish/community",
+    )
+    usrtypind = models.CharField(
+        blank=True, max_length=1, help_text="Postcode user type"
+    )
+    east1m = models.CharField(
+        blank=True, max_length=6, help_text="National grid reference - Easting"
+    )
+    north1m = models.CharField(
+        blank=True, max_length=7, help_text="National grid reference - Northing"
+    )
+    gridind = models.CharField(
+        blank=True,
+        max_length=1,
+        help_text="Grid reference positional quality indicator",
+    )
+    hlth19cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Former Strategic Health Authority (SHA)/Local Health Board (LHB)/Health Board (HB)/Health Authority (HA)/Health & Social Care Board (HSCB)",
+    )
+    nhser24cd = models.CharField(
+        blank=True, max_length=9, help_text="NHS England (Region) (NHS ER)"
+    )
+    ctry25cd = models.CharField(blank=True, max_length=9, help_text="Country")
+    rgn25cd = models.CharField(
+        blank=True, max_length=9, help_text="Region (former GOR)"
+    )
+    ssr95cd = models.CharField(
+        blank=True, max_length=9, help_text="Standard Statistical Region (SSR)"
+    )
+    pcon24cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Westminster parliamentary constituency",
+    )
+    eer20cd = models.CharField(
+        blank=True, max_length=9, help_text="European Electoral Region"
+    )
+    educ23cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Local Learning and Skills Council (LLSC)/Dept. of Children, Education, Lifelong Learning and Skills (DCELLS)/Enterprise Region (ER)",
+    )
+    ttwa15cd = models.CharField(
+        blank=True, max_length=9, help_text="Travel to Work Area (TTWA)"
+    )
+    pco19cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Primary Care Organisatioin (PCO): Care Trust (PCT)/Care Trust/Care Trust Plus (CT)/Local Health Board (LHB)/Community Health Partnership (CHP)/Local Commissioning Group (LCG)/Primary Healthcare Directorate (PHD)",
+    )
+    itl25cd = models.CharField(
+        blank=True,
+        max_length=10,
+        help_text="International Territorial Level (former NUTS)",
+    )
+    wdstl05cd = models.CharField(
+        blank=True,
+        max_length=6,
+        help_text="2005 ‘statistical’ ward (England and Wales only)",
+    )
+    oa01cd = models.CharField(
+        blank=True, max_length=10, help_text="2001 Census Output Area (OA)"
+    )
+    wdcas03cd = models.CharField(
+        blank=True, max_length=6, help_text="Census Area Statistics (CAS) ward"
+    )
+    npark16cd = models.CharField(
+        blank=True, max_length=9, help_text="National park"
+    )
+    lsoa01cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2001 Census Lower Layer Super Output Area (LSOA)/Data Zone (DZ)/Super Output Area (SOA)",
+    )
+    msoa01cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2001 Census Middle Layer Super Output Area (MSOA)/Intermediate Zone (IZ)",
+    )
+    ruc01ind = models.CharField(
+        blank=True, max_length=1, help_text="2001 Census urban/rural indicator"
+    )
+    oac01ind = models.CharField(
+        blank=True,
+        max_length=3,
+        help_text=" 2001 Census Output Area classification (OAC)",
+    )
+    oa11cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2011 Census Output Area (OA)/Small Area (SA)",
+    )
+    lsoa11cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2011 Census Lower Layer Super Output Area (LSOA)/Data Zone (DZ)/SOA",
+    )
+    msoa11cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2011 Census Middle Layer Super Output Area (MSOA)/Intermediate Zone (IZ)",
+    )
+    wz11cd = models.CharField(
+        blank=True, max_length=9, help_text="2011 Census Workplace Zone (WZ)"
+    )
+    bua24cd = models.CharField(
+        blank=True, max_length=9, help_text="Built-up Area (BUA)"
+    )
+    ruc11ind = models.CharField(
+        blank=True,
+        max_length=2,
+        help_text="2011 Census rural-urban classification",
+    )
+    oac11ind = models.CharField(
+        blank=True,
+        max_length=3,
+        help_text="2011 Census Output Area classification (OAC)",
+    )
+    lat = models.CharField(
+        blank=True, max_length=10, help_text="Decimal degrees latitude"
+    )
+    long = models.CharField(
+        blank=True, max_length=10, help_text="Decimal degrees longitude"
+    )
+    lep21cd1 = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Local Enterprise Partnership (LEP) - first instance",
+    )
+    lep21cd2 = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Local Enterprise Partnership (LEP) - second instance",
+    )
+    pfa23cd = models.CharField(
+        blank=True, max_length=9, help_text="Police Force Area (PFA)"
+    )
+    imd20ind = models.CharField(
+        blank=True,
+        max_length=5,
+        help_text="Index of Multiple Deprivation (IMD)for 2011 LSOAs",
+    )
+    cal24cd = models.CharField(
+        blank=True, max_length=9, help_text="Cancer Alliance (CAL)"
+    )
+    oa21cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2021 Census Output Area (OA)/Data Zone (DZ)",
+    )
+    lsoa21cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2021 Census Lower Layer Super Output Area (LSOA)/Super Data Zone (SDZ)",
+    )
+    msoa21cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="2021 Census Middle Layer Super Output Area (MSOA)",
+    )
+    ruc21ind = models.CharField(
+        blank=True,
+        max_length=4,
+        help_text="2021 Census rural-urban classification",
+    )
+    icb23cd = models.CharField(
+        blank=True, max_length=9, help_text="Integrated Care Board (ICB)"
+    )
+    sicbl24cd = models.CharField(
+        blank=True,
+        max_length=9,
+        help_text="Sub ICB Location (LOC)/Local Health Board (LHB)/Community Health Partnership (CHP)/Local Commissioning Group (LCG)/Primary Healthcare Directorate (PHD)",
+    )
 
     location = models.PointField(null=True, blank=True)
     objects = GeoManager()
@@ -196,19 +355,19 @@ class AbstractOnspd(models.Model):
         W99999999 (pseudo) = Wales;
         S99999999 (pseudo) = Scotland;
         """
-        return self.oscty
+        return self.cty25cd
 
     def _get_lad(self):
-        return self.oslaua
+        return self.lad25cd
 
     def _get_ward(self):
-        return self.osward
+        return self.wd25cd
 
     def _get_hlthau(self):
-        return self.oshlthau
+        return self.hlth19cd
 
     def _get_ruc11(self):
-        return self.ru11ind
+        return self.ruc11ind
 
     cty = property(_get_cty)
     lad = property(_get_lad)
