@@ -16,12 +16,16 @@ See the ONSPD [release notes](https://www.arcgis.com/sharing/rest/content/items/
 
 ## Aliases
 
-Where comparable fields exist in the ONSUD and ONSPD with different names, there are some convenience aliases defined on the models. This allows us to reference comparable columns using a consistent name across models. The following field names may be used interchangably and called on either model:
+Where comparable fields exist in the ONSUD and ONSPD with different names, there are some convenience aliases defined on the ONSPD model.
+This means the ONSUD field name will work on the ONSPD model. 
+The corresponding fields are listed in the table below.This allows us to reference comparable columns using a consistent name across models.
 
-| ONSPD    | ONSUD  |
-| ---------|--------|
-| oscty    | cty    |
-| oslaua   | lad    |
-| osward   | ward   |
-| oshlthau | hlthau |
-| ru11ind  | ruc11  |
+i.e. `Onspd.object.get(pk=1).wd25cd == Onspd.object.get(pk=1).ward`
+
+| ONSPD      | ONSUD  |
+|------------|--------|
+| cty25cd    | cty    |
+| lad25cd    | lad    |
+| wd25cd     | ward   |
+| hlth19cd   | hlthau |
+| ruc11ind   | ruc11  |
