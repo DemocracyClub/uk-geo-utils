@@ -29,3 +29,5 @@ i.e. `Onspd.object.get(pk=1).wd25cd == Onspd.object.get(pk=1).ward`
 | wd25cd     | ward   |
 | hlth19cd   | hlthau |
 | ruc11ind   | ruc11  |
+
+There is also an alias for `usertype`. So `Onspd.object.get(pk=1).usertype == Onspd.object.get(pk=1).usertypeind`

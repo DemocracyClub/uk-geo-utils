@@ -369,11 +369,15 @@ class AbstractOnspd(models.Model):
     def _get_ruc11(self):
         return self.ruc11ind
 
+    def _get_usertype(self):
+        return self.usrtypind
+
     cty = property(_get_cty)
     lad = property(_get_lad)
     ward = property(_get_ward)
     hlthau = property(_get_hlthau)
     ruc11 = property(_get_ruc11)
+    usertype = property(_get_usertype)
 
     class Meta:
         abstract = True
