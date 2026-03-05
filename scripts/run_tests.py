@@ -6,7 +6,7 @@ import django
 from django.conf import settings
 from django.test.utils import get_runner
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def root(*x):
