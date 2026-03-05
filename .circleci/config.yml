@@ -47,9 +47,13 @@ jobs:
             ruff check .
             ruff format . --check
       - run:
+          name: Django checks
+          command: |
+            python scripts/check.py
+      - run:
           name: Run tests
           command: |
-            coverage run --source=uk_geo_utils --omit=uk_geo_utils/tests/*.py,uk_geo_utils/migrations/*.py,uk_geo_utils/fixtures/*.py run_tests.py
+            coverage run --source=uk_geo_utils --omit=uk_geo_utils/tests/*.py,uk_geo_utils/migrations/*.py,uk_geo_utils/fixtures/*.py scripts/run_tests.py
       - run:
           name: Submit to Coveralls
           command: |
