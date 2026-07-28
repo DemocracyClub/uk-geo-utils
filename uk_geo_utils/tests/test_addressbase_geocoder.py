@@ -49,8 +49,9 @@ class AddressBaseGeocoderTest(TestCase):
         The AddressBase table has no records in it
         """
         get_address_model().objects.all().delete()
-        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
-            AddressBaseNotImportedException
+        with (
+            self.assertNumQueries(FuzzyInt(0, 4)),
+            self.assertRaises(AddressBaseNotImportedException),
         ):
             AddressBaseGeocoder("AA11AA")
 
@@ -59,14 +60,16 @@ class AddressBaseGeocoderTest(TestCase):
         The ONSUD table has no records in it
         """
         get_onsud_model().objects.all().delete()
-        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
-            OnsudNotImportedException
+        with (
+            self.assertNumQueries(FuzzyInt(0, 4)),
+            self.assertRaises(OnsudNotImportedException),
         ):
             AddressBaseGeocoder("AA11AA")
 
     def test_northern_ireland(self):
-        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
-            NorthernIrelandException
+        with (
+            self.assertNumQueries(FuzzyInt(0, 4)),
+            self.assertRaises(NorthernIrelandException),
         ):
             AddressBaseGeocoder("BT11AA")
 
@@ -74,8 +77,9 @@ class AddressBaseGeocoderTest(TestCase):
         """
         We can't find any records for the given postcode in the AddressBase table
         """
-        with self.assertNumQueries(FuzzyInt(0, 4)), self.assertRaises(
-            get_address_model().DoesNotExist
+        with (
+            self.assertNumQueries(FuzzyInt(0, 4)),
+            self.assertRaises(get_address_model().DoesNotExist),
         ):
             AddressBaseGeocoder("ZZ1 1ZZ")
 
