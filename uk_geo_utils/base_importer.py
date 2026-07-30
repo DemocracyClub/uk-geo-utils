@@ -59,10 +59,10 @@ class BaseImporter(BaseCommand):
 
         if url := options.get("url"):
             self.stdout.write(f"Downloading data from {url}")
-            tmp = tempfile.NamedTemporaryFile()
-            urllib.request.urlretrieve(url, tmp.name)
-            self.tempdir = unzip(tmp.name)
-            self.data_path = Path(self.tempdir) / "Data"
+            with tempfile.NamedTemporaryFile() as tmp:
+                urllib.request.urlretrieve(url, tmp.name)
+                self.tempdir = unzip(tmp.name)
+                self.data_path = Path(self.tempdir) / "Data"
 
         return data_path
 
